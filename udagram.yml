@@ -1,0 +1,127 @@
+Description: >
+  Udagram 
+Parameters:
+
+  SiteName:
+    Description: The name of the site and the project
+    Type: String
+  
+  VpcCIDR:
+    Description: The IP address range of the vpc
+    Type: String
+
+  PublicSubnet1CIDR:
+    Description: The IP address range of the 1st public subnet
+    Type: String
+  
+  PublicSubnet2CIDR:
+    Description: The IP address range of the 2nd public subnet
+    Type: String
+
+  PrivateSubnet1CIDR:
+    Description: The IP address range of the 1st private subnet
+    Type: String
+  
+  PrivateSubnet2CIDR:
+    Description: The IP address range of the 2nd private subnet
+    Type: String
+
+Resources:
+  VPC:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref VpcCIDR
+      EnableDnsHostnames: true
+      Tags:
+        - Key: name
+          Value: !Ref SiteName
+  InternetGateway:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: name
+          Value: !Ref SiteName
+
+  PublicSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs '']
+      CidrBlock: !Ref PublicSubnet1CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: name
+          Value: !Sub ${SiteName} Public Subnet 1
+  PublicSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 1, !GetAZs '']
+      CidrBlock: !Ref PublicSubnet2CIDR
+      MapPublicIpOnLaunch: true
+      Tags:
+        - Key: Name
+          Value: !Sub ${SiteName} Public Subnet 2
+  PrivateSubnet1:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 0, !GetAZs '']
+      CidrBlock: !Ref PrivateSubnet1CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${SiteName} Private Subnet 1
+  PrivateSubnet2:
+    Type: AWS::EC2::Subnet
+    Properties:
+      VpcId: !Ref VPC
+      AvailabilityZone: !Select [ 1, !GetAZs '']
+      CidrBlock: !Ref PrivateSubnet2CIDR
+      MapPublicIpOnLaunch: false
+      Tags:
+        - Key: Name
+          Value: !Sub ${SiteName} Private Subnet 2
+Outputs:
+  VPC:
+    Description: Refrence to the vpc created
+    Value: !Ref VPC
+    Export:
+      Name: !Sub ${SiteName}-VPCID
+  PublicSubnets:
+    Description: A list of public subnets
+    Value: !Join [",", [ !Ref PublicSubnet1, !Ref PublicSubnet2]]
+    Export:
+      Name: !Sub ${SiteName}-Public-Nets
+  PrivateSubnets:
+    Description: A list of private subnets
+    Value: !Join [ ",", [ !Ref PrivateSubnet1, !Ref PrivateSubnet2]]
+    Export:
+      Name: !Sub ${SiteName}-Private-Nets
+  PublicSubnet1:
+    Description: reference to the first public subnet
+    Value: !Ref PublicSubnet1
+    Export:
+      Name: !Sub ${SiteName}-Public-Net-1
+  PublicSubnet2:
+    Description: reference to the second public subnet
+    Value: !Ref PublicSubnet2
+    Export:
+      Name: !Sub ${SiteName}-Public-Net-2
+  PrivateSubnet1:
+    Description: reference to the first private subnet
+    Value: !Ref PrivateSubnet1
+    Export:
+      Name: !Sub ${SiteName}-Private-Net-1
+  PrivateSubnet2:
+    Description: reference to the second private subnet
+    Value: !Ref PrivateSubnet2
+    Export:
+      Name: !Sub ${SiteName}-Private-Net-2
+  InternetGateway:
+    Description: reference to the internet gateway
+    Value: !Ref InternetGateway
+    Export:
+      Name: !Sub ${SiteName}-InternetGatewayId
+
+  
