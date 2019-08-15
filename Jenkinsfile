@@ -13,7 +13,7 @@ pipeline {
     }
     stage('ec2 part2') {
       steps {
-        cfnUpdate(stack: 'udagramroute', file: 'udagramrout.yml', paramsFile: 'udagramroutedef.json')
+        cfnUpdate(stack: 'udagramroute', file: 'udagramroute.yml', paramsFile: 'udagramroutedef.json')
       }
     }
   }
