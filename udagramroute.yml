@@ -179,7 +179,7 @@ Resources:
             mv /etc/httpd/conf.d/welcome.conf /etc/httpd/conf.d/welcome.conf_backup
             systemctl restart httpd
             wget -P ../../var/www/html https://s3.us-east-1.amazonaws.com/poopy-crap/index.html
-        ImageId: ami-0ad82a384c06c911e
+        ImageId: ami-0b898040803850657
  
         SecurityGroups:
         - Ref: WebServerSecGroup
